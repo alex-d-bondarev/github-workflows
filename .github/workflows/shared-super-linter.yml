@@ -1,0 +1,38 @@
+name: Run Super-Linter
+
+on:
+  workflow_call:
+    inputs:
+      folder:
+        type: string
+        description: 'Project folder with the code. Leave empty if root folder'
+        required: true
+        default: './'
+      default_branch:
+        type: string
+        description: 'Changes to be merged to this default branch. Usually `origin/main` or `origin/master`.'
+        required: false
+        default: 'origin/main'
+
+jobs:
+  run-super-linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Full git history is needed to get a proper list of changed files within `super-linter`
+          fetch-depth: 0
+
+      - name: Run Super Linter checks
+        uses: super-linter/super-linter@v7.1.0
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: ${{ inputs.default_branch }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # Non default config
+          LINTER_RULES_PATH: ${{ inputs.folder }}
+          IGNORE_GITIGNORED_FILES: true
+          VALIDATE_PYTHON_RUFF: true
+          PYTHON_RUFF_CONFIG_FILE: pyproject.toml
