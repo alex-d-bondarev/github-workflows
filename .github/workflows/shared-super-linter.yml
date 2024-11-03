@@ -5,9 +5,9 @@ on:
     inputs:
       folder:
         type: string
-        description: 'Project folder with the code. Leave empty if root folder'
+        description: 'Project folder with the code'
         required: true
-        default: ''
+        default: './'
       default_branch:
         type: string
         description: 'Changes to be merged to this default branch. Usually `origin/main` or `origin/master`.'
